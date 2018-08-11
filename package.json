@@ -7,6 +7,9 @@
     "start": "nodemon --watch src/ --exec node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "me-away-bot": "./src/run.js"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
