@@ -1,0 +1,36 @@
+{
+  "name": "me-away-bot",
+  "version": "1.0.0",
+  "description": "VK autoresponder bot",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon --watch src/ --exec node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "author": " <Maxim Kurbatov>",
+  "license": "MIT",
+  "dependencies": {
+    "lru": "^3.1.0",
+    "vk-io": "^4.0.0-rc.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.0",
+    "nodemon": "^1.18.3",
+    "prettier": "^1.14.2"
+  }
+}
