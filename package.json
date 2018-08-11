@@ -21,7 +21,7 @@
       "git add"
     ]
   },
-  "author": " <Maxim Kurbatov>",
+  "author": "Maxim Kurbatov",
   "license": "MIT",
   "dependencies": {
     "lru": "^3.1.0",
