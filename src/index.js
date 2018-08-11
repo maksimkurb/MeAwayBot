@@ -23,6 +23,8 @@ const STEP_DEACTIVATED_TEMPORARY = -1;
 const STEP_STARTED = 0;
 const STEP_GREETED = 1;
 const STEP_REPEATED = 2;
+const STEP_REPEATED_AGAIN = 3;
+const STEP_REPEATED_THE_LAST_TIME = 4;
 
 vk.setOptions({
   token: process.env.TOKEN,
@@ -82,8 +84,9 @@ updates.use(async (context, next) => {
       break;
     case STEP_GREETED:
       const link = catsPurring[Math.floor(Math.random() * catsPurring.length)];
+      await context.send(m("Секундочку..."));
       await context.sendVoice(link, {
-        message: m("Ну ладно, послушай меня😽")
+        message: m("Мур 😽")
       });
       await context.send(
         m(
@@ -93,10 +96,24 @@ updates.use(async (context, next) => {
       walkthrough.set(context.peerId, STEP_REPEATED);
       break;
     case STEP_REPEATED:
-      await context.send(
-        m(
-          "Так нравится разговаривать с ботом? Тебе здесь серьёзно не ответят, нет."
-        )
+      await context.send(m("Больше ничего не скажу тебе. Я просто бот."));
+      walkthrough.set(context.peerId, STEP_REPEATED_AGAIN);
+      break;
+    case STEP_REPEATED_AGAIN:
+      await context.sendPhoto(
+        "https://memepedia.ru/wp-content/uploads/2018/08/dhlxrlww0aaqd7x.jpg",
+        {
+          message: m("Ti govorish po russki?")
+        }
+      );
+      walkthrough.set(context.peerId, STEP_REPEATED_THE_LAST_TIME);
+      break;
+    case STEP_REPEATED_THE_LAST_TIME:
+      await context.sendDocument(
+        "https://media.tenor.com/images/17ab9054835c731cc7dd0e1e4f368a5b/tenor.gif",
+        {
+          message: m("Всё, пока, я на вечеринку ботов. Вернусь завтра.")
+        }
       );
       walkthrough.set(context.peerId, STEP_DEACTIVATED_TEMPORARY);
       break;
