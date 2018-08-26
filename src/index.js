@@ -34,18 +34,6 @@ vk.setOptions({
 const { updates } = vk;
 
 updates.use(async (context, next) => {
-  if (!context.is("message")) return;
-  if (context.isChat) return;
-
-  if (context.isOutbox) {
-    if (context.hasText && context.text.indexOf(ZERO_WIDTH_SPACE) === -1) {
-      walkthrough.set(context.peerId, STEP_DEACTIVATED_TEMPORARY);
-    }
-    return;
-  }
-  if (locks[context.peerId]) return;
-  locks[context.peerId] = true;
-
   try {
     await next();
   } catch (error) {
@@ -53,8 +41,13 @@ updates.use(async (context, next) => {
   }
 });
 
+updates.hear("/cat", async context => {
+  console.log("11111");
+  await context.sendPhoto("https://cataas.com/cat");
+});
+
 function m(text) {
-  return ZERO_WIDTH_SPACE + text;
+  return "🔹" + ZERO_WIDTH_SPACE + text;
 }
 
 const catsPurring = [
@@ -63,7 +56,19 @@ const catsPurring = [
   "http://ronsen.org/purrfectsounds/purrs/chicken.mp3"
 ];
 
-updates.use(async (context, next) => {
+updates.setHearFallbackHandler(async context => {
+  if (!context.is("message")) return;
+  if (context.isChat) return;
+
+  if (context.isOutbox) {
+    if (!context.hasText || context.text.indexOf(ZERO_WIDTH_SPACE) === -1) {
+      walkthrough.set(context.peerId, STEP_DEACTIVATED_TEMPORARY);
+    }
+    return;
+  }
+  if (locks[context.peerId]) return;
+  locks[context.peerId] = true;
+
   let stage = walkthrough.peek(context.peerId);
   if (!stage) {
     stage = STEP_STARTED;
@@ -118,10 +123,6 @@ updates.use(async (context, next) => {
       walkthrough.set(context.peerId, STEP_DEACTIVATED_TEMPORARY);
       break;
   }
-  next();
-});
-
-updates.use(async context => {
   delete locks[context.peerId];
 });
 
